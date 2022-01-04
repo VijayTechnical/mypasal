@@ -10,6 +10,7 @@ use App\Models\Setup;
 use App\Models\Slider;
 use App\Models\Article;
 use App\Models\Contact;
+use App\Models\Vacancy;
 use App\Models\Category;
 use App\Models\Location;
 use App\Models\Application;
@@ -109,10 +110,10 @@ class HomeController extends Controller
             }
         }
 
-        // $posts = $posts->paginate(10);
+        $posts = $posts->paginate(10);
         $totalpost = Post::whereIn('category_id', $childrens)->where('status', 1)->where('is_sold', 0)->notExpire()->get();
 
-        return response()->json($totalpost);
+        return response()->json($totalpost,$posts);
     }
 
     public function Location()
@@ -199,7 +200,7 @@ class HomeController extends Controller
             }
         }
 
-        // $posts = $posts->paginate(config('site.paginate'));
+        $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->where('featured', 1)->orderBy('updated_at', 'DESC')->get();
     }
 
@@ -281,10 +282,10 @@ class HomeController extends Controller
             }
         }
 
-        // $posts = $posts->paginate(config('site.paginate'));
+        $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->orderBy('views', 'DESC')->get();
 
-        return response()->json($totalpost);
+        return response()->json($totalpost,$posts);
     }
 
     public function RecentPost(Request $request)
@@ -365,10 +366,10 @@ class HomeController extends Controller
             }
         }
 
-        // $posts = $posts->paginate(config('site.paginate'));
+        $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->orderBy('updated_at', 'DESC')->get();
 
-        return response()->json($totalpost);
+        return response()->json($totalpost,$posts);
     }
 
     public function PostDetail($slug)
@@ -530,7 +531,7 @@ class HomeController extends Controller
                 $posts->orderBy('views', 'DESC');
             }
         }
-        // $posts = $posts->paginate(config('site.paginate'));
+        $posts = $posts->paginate(10);
         $totalpost = Post::where('title', 'LIKE', '%' . $searchkey . '%')->notSold()->notExpire()->get();
 
         return response()->json($searchkey,$posts,$totalpost,$categories);
@@ -578,5 +579,25 @@ class HomeController extends Controller
         $contact->save();
 
         return response()->json($contact);
+    }
+
+    public function Career()
+    {
+        $vacancies = Vacancy::where('status', 1)->whereDate('expire_date', '>=', now())->get();
+
+        return response()->json($vacancies);
+    }
+
+    public function CareerDetail($slug)
+    {
+
+        $vacancy = Vacancy::where('slug', $slug)->where('status', 1)->whereDate('expire_date', '>=', now())->first();
+
+        if (!$vacancy) {
+            abort(404);
+        }
+
+        return response()->json($vacancy);
+
     }
 }
