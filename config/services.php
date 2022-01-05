@@ -40,5 +40,10 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => 'GOOGLE_REDIRECT_URI',
     ],
+    'esewa' => [
+        'merchant' => 'EPAYTEST',
+        'sandbox' => true,
+    ],
+
 
 ];

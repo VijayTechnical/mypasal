@@ -47,8 +47,6 @@ class UserPackController extends Controller
             'valid_parameter' => 'required',
             'size' => 'required',
             'price' => 'required',
-            'payment_status' => 'required',
-            'ref' => 'required'
         ]);
 
         $user_pack = new UserPack();

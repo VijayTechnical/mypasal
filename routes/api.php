@@ -59,8 +59,8 @@ Route::get('/articles/{slug}', [HomeController::class, 'ArticleDetail']);
 Route::get('/faq', [HomeController::class, 'Faq']);
 Route::get('/help', [HomeController::class, 'Help']);
 Route::get('/search', [HomeController::class, 'Search']);
-Route::get('/vacancies',[HomeController::class,'Career']);
-Route::get('/vacancies/{slug}',[HomeController::class,'CareerDetail']);
+Route::get('/vacancies', [HomeController::class, 'Career']);
+Route::get('/vacancies/{slug}', [HomeController::class, 'CareerDetail']);
 
 
 //Application sending route
@@ -71,12 +71,13 @@ Route::post('/contact/send', [HomeController::class, 'sendContact']);
 //Auth Routes
 Route::post('/login', [AuthController::class, 'Login']);
 Route::post('/register', [AuthController::class, 'Register']);
-Route::post('/password/email', [AuthController::class,'sendPasswordResetLinkEmail'])->middleware('throttle:5,1');
-Route::post('/password/reset', [AuthController::class,'resetPassword']);
+Route::post('/password/email', [AuthController::class, 'sendPasswordResetLinkEmail'])->middleware('throttle:5,1');
+Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 
 //Social Login Routes
-Route::get('/login/{provider}', [AuthController::class,'redirectToProvider']);
-Route::get('/login/{provider}/callback', [AuthController::class,'handleProviderCallback']);
+Route::get('/login/{provider}', [AuthController::class, 'redirectToProvider']);
+Route::get('/login/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
+
 
 
 
@@ -115,6 +116,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Logout
     Route::post('/logout', [AuthController::class, 'Logout']);
+
+    //PAyment Route
+
+    Route::get('payment/init/{ref}', [EsewaController::class, 'initiation'])->name('esewa.init');
+    Route::get('payment/success/{ref}', [EsewaController::class, 'completed'])->name('esewa.complete');
+    Route::get('payment/failed/{ref}', [EsewaController::class, 'failed'])->name('esewa.failed');
 });
 
 

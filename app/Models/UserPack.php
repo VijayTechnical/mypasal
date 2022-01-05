@@ -9,6 +9,9 @@ class UserPack extends Model
 {
     use HasFactory;
 
+    const PAYMENT_COMPLETED = 1;
+    const PAYMENT_PENDING = 0;
+
     protected $fillable = ['user_id','ad_pack_id','type','valid','valid_parameter','size','price','payment_status','ref'];
 
 
