@@ -25,13 +25,13 @@ class CreatePostsTable extends Migration
             $table->string('delivery_location')->nullable();
             $table->date('expire_date');
             $table->tinyInteger('is_sold')->default(0);
-            $table->tinyInteger('status')->default(0);
+            $table->enum('status',[0,1])->default(0);
             $table->longText('custom_fields')->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('category_id')->unsigned();
             $table->string('condition');
             $table->string('thumbnail')->nullable();
-            $table->tinyInteger('featured')->default(0);
+            $table->enum('featured',[0,1])->default(0);
             $table->integer('views')->nullable();
             $table->string('tag')->nullable();
             $table->integer('delivery_charge')->nullable();

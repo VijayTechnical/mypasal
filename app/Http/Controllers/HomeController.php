@@ -202,6 +202,8 @@ class HomeController extends Controller
 
         $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->where('featured', 1)->orderBy('updated_at', 'DESC')->get();
+
+        return response()->json([$totalpost,$posts]);
     }
 
     public function TrendingPost(Request $request)
@@ -285,7 +287,7 @@ class HomeController extends Controller
         $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->orderBy('views', 'DESC')->get();
 
-        return response()->json($totalpost,$posts);
+        return response()->json([$totalpost,$posts]);
     }
 
     public function RecentPost(Request $request)
@@ -369,7 +371,7 @@ class HomeController extends Controller
         $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->orderBy('updated_at', 'DESC')->get();
 
-        return response()->json($totalpost,$posts);
+        return response()->json([$totalpost,$posts]);
     }
 
     public function PostDetail($slug)
