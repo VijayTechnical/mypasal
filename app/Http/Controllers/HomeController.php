@@ -29,7 +29,7 @@ class HomeController extends Controller
 
         $category = Category::where('slug', $slug)->where('status', 1)->with('childrens')->first();
         if (!$category) {
-            abort(404);
+            return response()->json(['message'=>'Not found']);
         }
         $childrens = $category->childrens->pluck('id')->toArray();
         $childrens[] = $category->id;
@@ -89,7 +89,7 @@ class HomeController extends Controller
         }
 
         //Location filter
-        if ($request->location) {
+        if ($request->location_id) {
             $posts->whereIn('location_id', $request->location_id);
         }
 
@@ -395,22 +395,14 @@ class HomeController extends Controller
 
     public function Article()
     {
-
         $articles = Article::orderBy('created_at', 'DESC')->where('publish', 1)->get();
-
         return response()->json($articles);
-
     }
 
     public function ArticleDetail($slug)
     {
 
         $article = Article::where('slug', $slug)->where('publish', 1)->first();
-
-        if (!$article) {
-            abort(404);
-        }
-
         return response()->json($article);
 
     }
@@ -536,7 +528,7 @@ class HomeController extends Controller
         $posts = $posts->paginate(10);
         $totalpost = Post::where('title', 'LIKE', '%' . $searchkey . '%')->notSold()->notExpire()->get();
 
-        return response()->json($searchkey,$posts,$totalpost,$categories);
+        return response()->json([$searchkey,$posts,$totalpost,$categories]);
 
     }
 
@@ -592,13 +584,7 @@ class HomeController extends Controller
 
     public function CareerDetail($slug)
     {
-
         $vacancy = Vacancy::where('slug', $slug)->where('status', 1)->whereDate('expire_date', '>=', now())->first();
-
-        if (!$vacancy) {
-            abort(404);
-        }
-
         return response()->json($vacancy);
 
     }

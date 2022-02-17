@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Post extends Model
 {
@@ -56,6 +57,6 @@ class Post extends Model
 
     public function scopenotExpire($query)
     {
-        return $query->whereDate('expire_date', '>', now());
+        return $query->whereDate('expire_date', '>', Carbon::now());
     }
 }
