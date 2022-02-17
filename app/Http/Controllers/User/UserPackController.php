@@ -132,8 +132,13 @@ class UserPackController extends Controller
     public function destroy($id)
     {
         $user_pack = UserPack::find($id);
-        $user_pack->destroy($id);
-
-        return response()->json($user_pack);
+        if($user_pack)
+        {
+            $user_pack->destroy($id);
+            return response()->json($user_pack);
+        }
+        return response()->json([
+            'message' => 'No pack found!!!'
+        ,404]);
     }
 }

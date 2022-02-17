@@ -19,17 +19,17 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function editProfile(Request $request,$id)
+    public function editProfile(Request $request)
     {
         $this->validate($request,[
             'name' => 'required',
-            'email' => 'required|unique:users,email,'.$id,
+            'email' => 'required|unique:users,email,'.Auth::user()->id,
             'image' => 'required|mimes:png,jpg',
             'is_phone_hidden' => 'required',
             'phone' => 'required|integer|min:10',
             'address' => 'required'
         ]);
-        $user = User::find($id);
+        $user = User::find(Auth::user()->id);
         $user->name = $request->name;
         $user->email = $request->email;
         if ($user->profile_photo_path) {
@@ -55,7 +55,7 @@ class UserController extends Controller
         return response()->json($my_ads);
     }
 
-    public function changePassword(Request $request,$id)
+    public function changePassword(Request $request)
     {
         $this->validate($request,[
             'current_password' => 'required',
@@ -63,7 +63,7 @@ class UserController extends Controller
         ]);
         if(Hash::check($request->current_password,Auth::user()->password))
         {
-            $user = User::findOrFail($id);
+            $user = User::findOrFail(Auth::user()->id);
             $user->password = Hash::make($request->password);
             $user->save();
             return response()->json($user);

@@ -67,9 +67,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Profile related routes
     Route::get('/user/dashboard', [UserController::class, 'Dashboard']);
-    Route::post('/user/profile/edit/{user_id}', [UserController::class, 'editProfile']);
-    Route::post('/user/password/{user_id}', [UserController::class, 'changePassword']);
-    Route::post('/user/logout/{user_id}', [AuthController::class, 'Logout']);
+    Route::post('/user/profile/edit/', [UserController::class, 'editProfile']);
+    Route::post('/user/password/', [UserController::class, 'changePassword']);
 
     //User Pack related routes
     Route::get('/user/userpack/', [UserPackController::class, 'index']);
