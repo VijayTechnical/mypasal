@@ -24,12 +24,12 @@ class HomeController extends Controller
         return response()->json($categories);
     }
 
-    public function CategoryPost(Request $request,$slug)
+    public function CategoryPost(Request $request, $slug)
     {
 
         $category = Category::where('slug', $slug)->where('status', 1)->with('childrens')->first();
         if (!$category) {
-            return response()->json(['message'=>'Not found']);
+            return response()->json(['message' => 'Not found'],403);
         }
         $childrens = $category->childrens->pluck('id')->toArray();
         $childrens[] = $category->id;
@@ -76,7 +76,6 @@ class HomeController extends Controller
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -89,8 +88,8 @@ class HomeController extends Controller
         }
 
         //Location filter
-        if ($request->location_id) {
-            $posts->whereIn('location_id', $request->location_id);
+        if ($request->location) {
+            $posts->whereIn('location_id', $request->location);
         }
 
         //Sort Filter
@@ -113,7 +112,7 @@ class HomeController extends Controller
         $posts = $posts->paginate(10);
         $totalpost = Post::whereIn('category_id', $childrens)->where('status', 1)->where('is_sold', 0)->notExpire()->get();
 
-        return response()->json($totalpost,$posts);
+        return response()->json($totalpost, $posts);
     }
 
     public function Location()
@@ -166,7 +165,6 @@ class HomeController extends Controller
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -180,7 +178,7 @@ class HomeController extends Controller
 
         //Location filter
         if ($request->location) {
-            $posts->whereIn('location', $request->location);
+            $posts->whereIn('location_id', $request->location);
         }
 
         //Sort Filter
@@ -203,7 +201,7 @@ class HomeController extends Controller
         $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->where('featured', 1)->orderBy('updated_at', 'DESC')->get();
 
-        return response()->json([$totalpost,$posts]);
+        return response()->json([$totalpost, $posts]);
     }
 
     public function TrendingPost(Request $request)
@@ -250,7 +248,6 @@ class HomeController extends Controller
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -264,7 +261,7 @@ class HomeController extends Controller
 
         //Location filter
         if ($request->location) {
-            $posts->whereIn('location_id', $request->location_id);
+            $posts->whereIn('location_id', $request->location);
         }
 
         //Sort Filter
@@ -287,7 +284,7 @@ class HomeController extends Controller
         $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->orderBy('views', 'DESC')->get();
 
-        return response()->json([$totalpost,$posts]);
+        return response()->json([$totalpost, $posts]);
     }
 
     public function RecentPost(Request $request)
@@ -334,7 +331,6 @@ class HomeController extends Controller
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -348,7 +344,7 @@ class HomeController extends Controller
 
         //Location filter
         if ($request->location) {
-            $posts->whereIn('location_id', $request->location_id);
+            $posts->whereIn('location_id', $request->location);
         }
 
         //Sort Filter
@@ -371,7 +367,7 @@ class HomeController extends Controller
         $posts = $posts->paginate(10);
         $totalpost = Post::where('status', 1)->notSold()->notExpire()->orderBy('updated_at', 'DESC')->get();
 
-        return response()->json([$totalpost,$posts]);
+        return response()->json([$totalpost, $posts]);
     }
 
     public function PostDetail($slug)
@@ -404,7 +400,6 @@ class HomeController extends Controller
 
         $article = Article::where('slug', $slug)->where('publish', 1)->first();
         return response()->json($article);
-
     }
 
     public function Setup()
@@ -434,13 +429,13 @@ class HomeController extends Controller
             $products[] = $request->compare;
         }
 
-        return response()->json($products,$compares);
+        return response()->json($products, $compares);
     }
 
     public function Search(Request $request)
     {
         if (!$request->key) {
-            abort(404);
+            return response()->json(['message' => 'Not found'],403);
         }
         $searchkey = $request->key;
         $posts = Post::where('status', 1)->notSold()->notExpire();
@@ -492,7 +487,6 @@ class HomeController extends Controller
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -506,7 +500,7 @@ class HomeController extends Controller
 
         //Location filter
         if ($request->location) {
-            $posts->whereIn('location_id', $request->location_id);
+            $posts->whereIn('location_id', $request->location);
         }
 
         //Sort Filter
@@ -528,8 +522,7 @@ class HomeController extends Controller
         $posts = $posts->paginate(10);
         $totalpost = Post::where('title', 'LIKE', '%' . $searchkey . '%')->notSold()->notExpire()->get();
 
-        return response()->json([$searchkey,$posts,$totalpost,$categories]);
-
+        return response()->json([$searchkey, $posts, $totalpost, $categories]);
     }
 
     public function sendApplication(Request $request)
@@ -586,6 +579,5 @@ class HomeController extends Controller
     {
         $vacancy = Vacancy::where('slug', $slug)->where('status', 1)->whereDate('expire_date', '>=', now())->first();
         return response()->json($vacancy);
-
     }
 }
